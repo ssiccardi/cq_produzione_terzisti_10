@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<!-- #### STOCK PICKING #### -->
+
+    <!--  Menuitem pooling all the incoming pickings from contractors -->
+<!--
+    <record id="action_server_picking_in_terz" model="ir.actions.server">
+        <field name="name">Movimenti da Terzista</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="code">
+
+StockMove = env['stock.move']
+search_view_id = env['ir.model.data'].get_object_reference('stock', 'view_picking_internal_search')[1]
+
+in_moves = StockMove.search([('in_terz_production_id','!=',False)])
+in_pick_ids = list(set([move.picking_id.id for move in in_moves]))
+
+action = {
+    "type": "ir.actions.act_window",
+    "name": "Movimenti da Terzista",
+    "view_type": "form",
+    "view_mode": "tree,kanban,form,calendar",
+    "res_model": "stock.picking",
+    "domain": [('id','in',in_pick_ids)],
+    "context": {'contact_display': 'partner_address', },
+    "search_view_id": search_view_id,
+}
+        </field>
+    </record>
+
+    <menuitem id="picking_in_terz_menu" name="Movimenti da Terzista"
+        parent="stock.menu_stock_warehouse_mgmt" sequence="31" action="action_server_picking_in_terz"/>
+-->
+
+    <!--  Menuitem pooling all the outgoing pickings to contractors -->
+    <record id="action_server_picking_out_terz" model="ir.actions.server">
+        <field name="name">Movimenti verso Terzista</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="code">
+
+StockMove = env['stock.move']
+search_view_id = env['ir.model.data'].get_object_reference('stock', 'view_picking_internal_search')[1]
+
+out_moves = StockMove.search([('out_terz_production_id','!=',False)])
+out_pick_ids = list(set([move.picking_id.id for move in out_moves]))
+
+action = {
+    "type": "ir.actions.act_window",
+    "name": "Movimenti verso Terzista",
+    "view_type": "form",
+    "view_mode": "tree,kanban,form,calendar",
+    "res_model": "stock.picking",
+    "domain": [('id','in',out_pick_ids)],
+    "context": {'contact_display': 'partner_address'},
+    "search_view_id": search_view_id,
+}
+        </field>
+    </record>
+
+    <menuitem id="picking_out_terz_menu" name="Movimenti verso Terzista"
+        parent="stock.menu_stock_warehouse_mgmt" sequence="32" action="action_server_picking_out_terz"/>
+
+    </data>
+</odoo>

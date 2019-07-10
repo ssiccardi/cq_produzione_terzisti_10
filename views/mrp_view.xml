@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_product_stock_terz_tot" model="ir.ui.view">
+            <field name="name">view.product.stock.terz.tot</field>
+            <field name="model">mrp.production</field>
+            <field name="priority" eval="50" />
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='location_src_id']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state','!=','confirmed')]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='location_dest_id']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state','!=','confirmed')]}</attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+        <!-- Adding the contractor's stock moves page on the MRP orders form -->
+        <record model="ir.ui.view" id="view_button_delivery">
+            <field name="name">view.button.delivery</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view" />
+            <field name="arch" type="xml">
+
+                <xpath expr="//sheet/group/group/field[@name='product_tmpl_id']" position="after">
+                    <field name="terz_type" readonly="1"/>
+                </xpath>
+
+                <xpath expr="/form/sheet/notebook/page[3]" position="after">
+
+                    <page name="out_terz_moves" string="Spedizione verso Terzista"
+                        attrs="{'invisible':[('terz_type','not in',('lav_terz','spedisci_terz'))]}">
+                        <!-- attrs="{'invisible':[('state','=','draft')]}" -->
+                        <group name="out_terz_group" string="Spedizione materie prime">
+                            <button name="action_controllo_spedisci_materie" string="Spedisci materie prime"
+                                type="object" attrs="{'invisible':['|',('state','=','done'),('terz_type','!=','lav_terz')]}"/>
+                            <separator string="" colspan="2"/>
+                            <field name="out_terz_move_ids" nolabel="1" readonly="1">
+                                <tree decoration-primary="state == 'draft'"
+                                      decoration-default="state in ('cancel','done')"
+                                      decoration-danger="state in ('confirmed','waiting')"
+                                      string="Spedizione materie prime">
+                                    <field name="product_id"/>
+                                    <field name="product_uom_qty" string="Quantità"/>
+                                    <field name="product_uom" string="Unita' di misura" groups="product.group_uom"/>
+                                    <field name="picking_id" string="Movimento"/>
+                                    <field name="location_id" string="Partenza"/>
+                                    <field name="location_dest_id" string="Destinazione"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+                    <page name="in_terz_moves" string="Ricezione dal Terzista"
+                        attrs="{'invisible':[('terz_type','=','lav_terz')]}" invisible="1">
+                        <!-- attrs="{'invisible':[('state','=','draft')]}" -->
+                        <group name="in_terz_group" string="Ricezione prodotti finiti">
+                            <field name="in_terz_move_ids" nolabel="1" readonly="1">
+                                <tree decoration-primary="state == 'draft'"
+                                      decoration-default="state in ('cancel','done')"
+                                      decoration-danger="state in ('confirmed','waiting')"
+                                      string="Ricezione prodotti finiti">
+                                    <field name="product_id"/>
+                                    <field name="product_uom_qty" string="Quantità"/>
+                                    <field name="product_uom" string="Unita' di misura" groups="product.group_uom"/>
+                                    <field name="picking_id" string="Movimento"/>
+                                    <field name="location_id" string="Partenza"/>
+                                    <field name="location_dest_id" string="Destinazione"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+
+                </xpath>
+
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

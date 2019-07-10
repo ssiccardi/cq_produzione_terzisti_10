@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Contractor's move delivery form view wizard -->
+        <record id="form_spedisci_materie" model="ir.ui.view">
+            <field name="name">form.spedisci.materie</field>
+            <field name="model">cq.wizard.stock</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            <form string="Scegli Punto di Stoccaggio">
+
+                <separator string="" colspan="8"/>
+                <group>
+                    <field name="stock_start_id" string="Seleziona il punto di stoccaggio di partenza:"
+                        domain="[('usage','=','internal')]"/>
+                    <field name="dest_id" string="Destinazione:" readonly="True"/>
+                </group>
+                <footer>
+                    <button string="Annulla" class="btn-default" special="cancel"/>
+                    <button name="delivery_product" string="Crea ordine di spedizione" type="object"/>
+                </footer>
+            </form>
+          </field>
+        </record>
+
+        <!-- Contractor's move delivery action wizard -->
+        <record id="action_spedisci_materie" model="ir.actions.act_window">
+            <field name="name">Spedizione materie prime</field>
+            <field name="res_model">cq.wizard.stock</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="form_spedisci_materie"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>
